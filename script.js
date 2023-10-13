@@ -164,49 +164,108 @@ function init()
     gamebody.innerHTML = getDisplayString(snakeBody, fruitPair)
 
     let gameOver = false
-    const nextDirections = [direction]
+
+    let leftPressed = false
+    let rightPressed = false
+    let downPressed = false
+    let upPressed = false
     window.addEventListener("keydown", (event) => {
         if (event.isComposing || event.keyCode === 229) {
           return;
         }
-        if(nextDirections.length >= 2)
-            return;
         if(event.keyCode === 37) // left
-            nextDirections.push(2)
+            leftPressed = true
         if(event.keyCode === 38) // up
-            nextDirections.push(3)
+            upPressed = true
         if(event.keyCode === 39) // right
-            nextDirections.push(0)
+            rightPressed = true
         if(event.keyCode === 40) // down
-            nextDirections.push(1)
+            downPressed = true
       });
-    let nextDirection = null
+
+    window.addEventListener("keyup", (event) => {
+        if (event.isComposing || event.keyCode === 229) {
+            return;
+        }
+        if(event.keyCode === 37) // left
+            leftPressed = false
+        if(event.keyCode === 38) // up
+            upPressed = false
+        if(event.keyCode === 39) // right
+            rightPressed = false
+        if(event.keyCode === 40) // down
+            downPressed = false
+    });
+    let nextDirection = direction
+    let readNextDirections = true
+    let nextDirections = []
 
     setInterval(() =>{
         if(gameOver)
             return
         const lastDirection = nextDirection
+
+        //get next directions
+        if(readNextDirections)
+        {
+            nextDirections = []
+            if(leftPressed)
+                nextDirections.push(2)
+            if(upPressed)
+                nextDirections.push(3)
+            if(rightPressed)
+                nextDirections.push(0)
+            if(downPressed)
+                nextDirections.push(1)
+            if(nextDirections.length > 2)
+                nextDirections = nextDirections.slice(0,2)
+        }
+        else readNextDirections = true
+
+        //process directions
         if(nextDirections.length > 0)
         {
-            nextDirection = nextDirections.shift()
-            if(lastDirection !== null)
+            console.log(nextDirections)
+            if(nextDirections.length === 1)
             {
-                if(modulo(lastDirection - nextDirection, 4) === 2)
-                {
-                    if(nextDirections.length === 0)
-                    {
-                        nextDirection = lastDirection
-                    }
-                    else if(nextDirections.length === 1)
-                    {
-                        //reverse order
-                        nextDirections.push(nextDirection)
-                        nextDirection = nextDirections.shift()
-                    }
-                    else throw new Error("Too many control keys!")
+                nextDirection = nextDirections.shift()
+                if(modulo(lastDirection - nextDirection, 4) === 2){
+                    nextDirection = lastDirection
+                }
+            }
+            else if(nextDirections.length === 2 && nextDirections[0] === nextDirection)
+            {
+                nextDirections.shift()
+                nextDirection = nextDirections.shift()
+                if(modulo(lastDirection - nextDirection, 4) === 2){
+                    nextDirection = lastDirection
+                }
+            }
+            else if(nextDirections.length === 2 && nextDirections[1] === nextDirection)
+            {
+                nextDirections.pop()
+                nextDirection = nextDirections.shift()
+                if(modulo(lastDirection - nextDirection, 4) === 2){
+                    nextDirection = lastDirection
+                }
+            }
+            else if(nextDirections.length === 2)
+            {
+                const direction1 = nextDirections.shift()
+                const direction2 = nextDirections.pop()
+                if(modulo(lastDirection - direction1, 4) === 2){
+                    nextDirection = direction2
+                    nextDirections = [direction1]
+                    readNextDirections = false
+                }
+                if(modulo(lastDirection - direction2, 4) === 2){
+                    nextDirection = direction1
+                    nextDirections = [direction2]
+                    readNextDirections = false
                 }
             }
         }
+
         const nextPair = getPositionAfterDirection(snakeBody[snakeBody.length - 1], nextDirection)
         const nextPairString = nextPair.asText()
         let foundSnack = false
