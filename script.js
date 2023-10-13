@@ -1,5 +1,5 @@
-const maxX = 50;
-const maxY = 30;
+const maxX = 3;
+const maxY = 3;
 
 class Pair {
     constructor(x, y) {
@@ -91,7 +91,7 @@ function getDisplayString(snakeBody, fruitPair)
 
 function init()
 {
-    const snakeSize = 5;
+    const snakeSize = 3;
     const direction = Math.floor(Math.random() * 4)
     const snakeOriginX = Math.floor(Math.random() * maxX)
     const snakeOriginY = Math.floor(Math.random() * maxY)
@@ -111,7 +111,7 @@ function init()
         for(j=0;j<maxY;j++)
         {
             const newPair = new Pair(i,j)
-            if(!snakeBodySet.has(newPair))
+            if(!snakeBodySet.has(newPair.asText()))
                 freeSpaces.add(newPair.asText())
         }
     }
@@ -164,5 +164,5 @@ function init()
         snakeBodySet.add(nextPairString)
         freeSpaces.delete(nextPairString)
         gamebody.innerHTML = getDisplayString(snakeBody, fruitPair)
-    }, 50);
+    }, 1000);
 }
