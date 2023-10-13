@@ -197,7 +197,6 @@ function init()
             downPressed = false
     });
     let nextDirection = direction
-    let readNextDirections = true
     let nextDirections = []
 
     setInterval(() =>{
@@ -206,7 +205,7 @@ function init()
         const lastDirection = nextDirection
 
         //get next directions
-        if(readNextDirections)
+        if(nextDirections.length === 0)
         {
             nextDirections = []
             if(leftPressed)
@@ -225,7 +224,7 @@ function init()
         //process directions
         if(nextDirections.length > 0)
         {
-            console.log(nextDirections)
+            console.log("Next directions:", nextDirections)
             if(nextDirections.length === 1)
             {
                 nextDirection = nextDirections.shift()
@@ -235,15 +234,13 @@ function init()
             }
             else if(nextDirections.length === 2 && nextDirections[0] === nextDirection)
             {
-                nextDirections.shift()
-                nextDirection = nextDirections.shift()
+                nextDirection = nextDirections.pop()
                 if(modulo(lastDirection - nextDirection, 4) === 2){
                     nextDirection = lastDirection
                 }
             }
             else if(nextDirections.length === 2 && nextDirections[1] === nextDirection)
             {
-                nextDirections.pop()
                 nextDirection = nextDirections.shift()
                 if(modulo(lastDirection - nextDirection, 4) === 2){
                     nextDirection = lastDirection
@@ -256,12 +253,10 @@ function init()
                 if(modulo(lastDirection - direction1, 4) === 2){
                     nextDirection = direction2
                     nextDirections = [direction1]
-                    readNextDirections = false
                 }
                 if(modulo(lastDirection - direction2, 4) === 2){
                     nextDirection = direction1
                     nextDirections = [direction2]
-                    readNextDirections = false
                 }
             }
         }
