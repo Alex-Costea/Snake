@@ -1,5 +1,5 @@
-const maxX = 50;
-const maxY = 30;
+const maxX = 3;
+const maxY = 3;
 
 class Pair {
     constructor(x, y) {
@@ -49,6 +49,7 @@ function getFruitPair(freeSpaces)
     //run if this is efficient
     if(freeSpaces.size > maxX * maxY / 40)
     {
+        //console.log("running v1")
         while(true)
         {
             const newFruitPair = new Pair(Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY))
@@ -58,6 +59,7 @@ function getFruitPair(freeSpaces)
             }
         }
     }
+    //console.log("running v2")
     if(freeSpaces.size === 0)
         return null
     const freeSpacesEntries = Array.from(freeSpaces)
@@ -149,15 +151,14 @@ function init()
         {
             fruitPair = getFruitPair(freeSpaces)
         }
-        else if(snakeBodySet.has(nextPairString))
-        {
-            gameOver = true
-        }
-        else
-        {
+        else{
             const firstPairOfSnakeBody = snakeBody.shift().asText()
             snakeBodySet.delete(firstPairOfSnakeBody)
             freeSpaces.add(firstPairOfSnakeBody)
+        }
+        if(snakeBodySet.has(nextPairString))
+        {
+            gameOver = true
         }
         snakeBody.push(nextPair)
         snakeBodySet.add(nextPairString)
