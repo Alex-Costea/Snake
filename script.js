@@ -1,5 +1,5 @@
-const maxX = 20;
-const maxY = 20;
+const maxX = 50;
+const maxY = 30;
 const snakeSize = 5;
 
 class Pair {
@@ -136,5 +136,5 @@ function init()
         snakeBody.push(nextPair)
         snakeBodySet.add(nextPairString)
         gamebody.innerHTML = getDisplayString(snakeBody, fruitPair)
-    }, 200);
+    }, 50);
 }
