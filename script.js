@@ -29,6 +29,17 @@ function getPositionAfterDirection(pair, direction)
     }
 }
 
+function getDirection(pair1, pair2)
+{
+    for(i=0;i<4;i++)
+    {
+        const newPair = getPositionAfterDirection(pair1, i);
+        if(pair2.asText() === newPair.asText())
+            return i;
+    }
+    throw new Error("Direction unknown!")
+}
+
 function initDisplay(maxX, maxY)
 {
     let display = []
@@ -68,22 +79,53 @@ function getFruitPair(freeSpaces)
     return new Pair(pair.x, pair.y)
 }
 
+function getBlock(previousDirection, nextDirection)
+{
+    const value = `${previousDirection}, ${nextDirection}`
+    switch (value)
+    {
+        case '0, 0': return '&#9552;'
+        case '2, 2': return '&#9552;'
+        case '1, 1': return '&#9553;'
+        case '3, 3': return '&#9553;'
+        case '0, 1': return '&#9559;'
+        case '3, 2': return '&#9559;'
+        case '0, 3': return '&#9565;'
+        case '1, 2': return '&#9565;'
+        case '2, 1': return '&#9556;'
+        case '3, 0': return '&#9556;'
+        case '1, 0': return '&#9562;'
+        case '2, 3': return '&#9562;'
+        default: throw new Error(`Cannot get block element ${value}`)
+    }
+}
+
+let toggle = 0
+function getFruitCharacter()
+{
+    toggle = modulo(toggle+1, 20)
+    return toggle >= 10 ? '&#9626;' : '&#9630;'
+}
+
 function getDisplayString(snakeBody, fruitPair)
 {
     const display = initDisplay(maxX, maxY)
-    i = 0;
-    for(piece of snakeBody){
+    for(let i=0;i<snakeBody.length;i++){
+        const piece = snakeBody[i]
         if(i===snakeBody.length-1)
         {
-            display[piece.y][piece.x] = '@'
+            display[piece.y][piece.x] = '&#9608;'
         }
         else {
-            display[piece.y][piece.x] = '%'
+            const lastPiece = (i!==0) ? snakeBody[i-1] : null
+            const nextPiece = snakeBody[i+1]
+            const nextDirection = getDirection(piece, nextPiece)
+            const previousDirection = lastPiece !== null ? getDirection(lastPiece,piece) : nextDirection
+            display[piece.y][piece.x] = getBlock(previousDirection, nextDirection)
         }
-        i++;
     }
     if(fruitPair !== null)
-        display[fruitPair.y][fruitPair.x] = '*'
+        display[fruitPair.y][fruitPair.x] = getFruitCharacter()
 
     return display.map(x => x.join('')).join('\n')
 }
