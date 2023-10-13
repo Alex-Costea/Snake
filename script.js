@@ -1,5 +1,5 @@
-const maxX = 3;
-const maxY = 3;
+const maxX = 50;
+const maxY = 30;
 
 class Pair {
     constructor(x, y) {
