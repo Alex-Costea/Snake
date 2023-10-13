@@ -140,7 +140,7 @@ function init()
         if(gameOver)
             return
         const lastDirection = nextDirection
-        nextDirection = nextDirections.length > 1 ? nextDirections.shift() : nextDirections[0]
+        nextDirection = nextDirections.length > 0 ? nextDirections.shift() : nextDirection
         if((lastDirection !== null) && modulo(lastDirection - nextDirection, 4) === 2)
             nextDirection = lastDirection
         const nextPair = getPositionAfterDirection(snakeBody[snakeBody.length - 1], nextDirection)
