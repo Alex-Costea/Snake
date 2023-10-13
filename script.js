@@ -164,5 +164,5 @@ function init()
         snakeBodySet.add(nextPairString)
         freeSpaces.delete(nextPairString)
         gamebody.innerHTML = getDisplayString(snakeBody, fruitPair)
-    }, 1000);
+    }, 50);
 }
