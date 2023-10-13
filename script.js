@@ -169,6 +169,8 @@ function init()
         if (event.isComposing || event.keyCode === 229) {
           return;
         }
+        if(nextDirections.length >= 2)
+            return;
         if(event.keyCode === 37) // left
             nextDirections.push(2)
         if(event.keyCode === 38) // up
@@ -184,9 +186,27 @@ function init()
         if(gameOver)
             return
         const lastDirection = nextDirection
-        nextDirection = nextDirections.length > 0 ? nextDirections.shift() : nextDirection
-        if((lastDirection !== null) && modulo(lastDirection - nextDirection, 4) === 2)
-            nextDirection = lastDirection
+        if(nextDirections.length > 0)
+        {
+            nextDirection = nextDirections.shift()
+            if(lastDirection !== null)
+            {
+                if(modulo(lastDirection - nextDirection, 4) === 2)
+                {
+                    if(nextDirections.length === 0)
+                    {
+                        nextDirection = lastDirection
+                    }
+                    else if(nextDirections.length === 1)
+                    {
+                        //reverse order
+                        nextDirections.push(nextDirection)
+                        nextDirection = nextDirections.shift()
+                    }
+                    else throw new Error("Too many control keys!")
+                }
+            }
+        }
         const nextPair = getPositionAfterDirection(snakeBody[snakeBody.length - 1], nextDirection)
         const nextPairString = nextPair.asText()
         let foundSnack = false
