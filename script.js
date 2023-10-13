@@ -147,9 +147,10 @@ function init()
             nextDirection = lastDirection
         const nextPair = getPositionAfterDirection(snakeBody[snakeBody.length - 1], nextDirection)
         const nextPairString = nextPair.asText()
-        if(nextPairString === fruitPair.asText())
+        let foundSnack = false
+        if((fruitPair!== null) && (nextPairString === fruitPair.asText()))
         {
-            fruitPair = getFruitPair(freeSpaces)
+            foundSnack = true
         }
         else{
             const firstPairOfSnakeBody = snakeBody.shift().asText()
@@ -163,6 +164,10 @@ function init()
         snakeBody.push(nextPair)
         snakeBodySet.add(nextPairString)
         freeSpaces.delete(nextPairString)
+        if(foundSnack)
+        {
+            fruitPair = getFruitPair(freeSpaces)
+        }
         gamebody.innerHTML = getDisplayString(snakeBody, fruitPair)
     }, 50);
 }
