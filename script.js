@@ -1,5 +1,5 @@
-const maxX = 3;
-const maxY = 3;
+const maxX = 50;
+const maxY = 30;
 
 class Pair {
     constructor(x, y) {
@@ -91,7 +91,7 @@ function getDisplayString(snakeBody, fruitPair)
 
 function init()
 {
-    const snakeSize = 3;
+    const snakeSize = 10;
     const direction = Math.floor(Math.random() * 4)
     const snakeOriginX = Math.floor(Math.random() * maxX)
     const snakeOriginY = Math.floor(Math.random() * maxY)
