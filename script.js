@@ -216,7 +216,7 @@ function init()
             if(downPressed)
                 nextDirections.push(1)
             if(nextDirections.length > 2)
-                nextDirections = nextDirections.slice(0,2)
+                nextDirections = []
         }
 
         //process directions
