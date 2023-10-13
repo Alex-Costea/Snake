@@ -44,16 +44,26 @@ function initDisplay(maxX, maxY)
     return display
 }
 
-function getFruitPair(snakeBodySet)
+function getFruitPair(freeSpaces)
 {
-    while(true)
+    //run if this is efficient
+    if(freeSpaces.size > maxX * maxY / 40)
     {
-        const newFruitPair = new Pair(Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY))
-        if(!snakeBodySet.has(newFruitPair.asText()))
+        while(true)
         {
-            return newFruitPair
+            const newFruitPair = new Pair(Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY))
+            if(freeSpaces.has(newFruitPair.asText()))
+            {
+                return newFruitPair
+            }
         }
     }
+    if(freeSpaces.size === 0)
+        return null
+    const freeSpacesEntries = Array.from(freeSpaces)
+    const randomPick = Math.floor(Math.random() * freeSpaces.size)
+    const pair = JSON.parse(freeSpacesEntries[randomPick])
+    return new Pair(pair.x, pair.y)
 }
 
 function getDisplayString(snakeBody, fruitPair)
@@ -70,7 +80,8 @@ function getDisplayString(snakeBody, fruitPair)
         }
         i++;
     }
-    display[fruitPair.y][fruitPair.x] = '*'
+    if(fruitPair !== null)
+        display[fruitPair.y][fruitPair.x] = '*'
 
     return display.map(x => x.join('')).join('\n')
 }
@@ -92,9 +103,20 @@ function init()
     }
     const snakeBodySet = new Set(snakeBody.map(x => x.asText()))
 
+    const freeSpaces = new Set()
+    for(i=0;i<maxX;i++)
+    {
+        for(j=0;j<maxY;j++)
+        {
+            const newPair = new Pair(i,j)
+            if(!snakeBodySet.has(newPair))
+                freeSpaces.add(newPair.asText())
+        }
+    }
+
     const gamebody = document.getElementById("gamebody")
 
-    let fruitPair = getFruitPair(snakeBodySet)
+    let fruitPair = getFruitPair(freeSpaces)
     gamebody.innerHTML = getDisplayString(snakeBody, fruitPair)
 
     let gameOver = false
@@ -119,13 +141,13 @@ function init()
             return
         const lastDirection = nextDirection
         nextDirection = nextDirections.length > 1 ? nextDirections.shift() : nextDirections[0]
-        if(modulo(lastDirection - nextDirection, 4) === 2)
+        if((lastDirection !== null) && modulo(lastDirection - nextDirection, 4) === 2)
             nextDirection = lastDirection
         const nextPair = getPositionAfterDirection(snakeBody[snakeBody.length - 1], nextDirection)
         const nextPairString = nextPair.asText()
         if(nextPairString === fruitPair.asText())
         {
-            fruitPair = getFruitPair(snakeBodySet)
+            fruitPair = getFruitPair(freeSpaces)
         }
         else if(snakeBodySet.has(nextPairString))
         {
@@ -133,10 +155,13 @@ function init()
         }
         else
         {
-            snakeBodySet.delete(snakeBody.shift().asText())
+            const firstPairOfSnakeBody = snakeBody.shift().asText()
+            snakeBodySet.delete(firstPairOfSnakeBody)
+            freeSpaces.add(firstPairOfSnakeBody)
         }
         snakeBody.push(nextPair)
         snakeBodySet.add(nextPairString)
+        freeSpaces.delete(nextPairString)
         gamebody.innerHTML = getDisplayString(snakeBody, fruitPair)
     }, 50);
 }
