@@ -1,11 +1,14 @@
 const maxX = 50;
 const maxY = 30;
-const snakeSize = 5;
 
 class Pair {
     constructor(x, y) {
       this.x = x;
       this.y = y;
+    }
+    asText()
+    {
+        return JSON.stringify(this)
     }
   }
 
@@ -46,7 +49,7 @@ function getFruitPair(snakeBodySet)
     while(true)
     {
         const newFruitPair = new Pair(Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY))
-        if(!snakeBodySet.has(JSON.stringify(newFruitPair)))
+        if(!snakeBodySet.has(newFruitPair.asText()))
         {
             return newFruitPair
         }
@@ -75,28 +78,26 @@ function getDisplayString(snakeBody, fruitPair)
 
 function init()
 {
+    const snakeSize = 5;
     const direction = Math.floor(Math.random() * 4)
     const snakeOriginX = Math.floor(Math.random() * maxX)
     const snakeOriginY = Math.floor(Math.random() * maxY)
-    let pair = new Pair(snakeOriginX, snakeOriginY)
-
-    let i = 0;
     const snakeBody = []
+
+    let pair = new Pair(snakeOriginX, snakeOriginY)
     for(i=0;i<snakeSize;i++)
     {
         snakeBody.push(pair)
         pair = getPositionAfterDirection(pair, direction)
     }
-    const snakeBodySet = new Set(snakeBody.map(x => JSON.stringify(x)))
+    const snakeBodySet = new Set(snakeBody.map(x => x.asText()))
 
     const gamebody = document.getElementById("gamebody")
-    
 
     let fruitPair = getFruitPair(snakeBodySet)
     gamebody.innerHTML = getDisplayString(snakeBody, fruitPair)
 
     let gameOver = false
-
     const nextDirections = [direction]
     window.addEventListener("keydown", (event) => {
         if (event.isComposing || event.keyCode === 229) {
@@ -112,6 +113,7 @@ function init()
             nextDirections.push(1)
       });
     let nextDirection = null
+
     setInterval(() =>{
         if(gameOver)
             return
@@ -120,8 +122,8 @@ function init()
         if(modulo(lastDirection - nextDirection, 4) === 2)
             nextDirection = lastDirection
         const nextPair = getPositionAfterDirection(snakeBody[snakeBody.length - 1], nextDirection)
-        const nextPairString = JSON.stringify(nextPair)
-        if(nextPairString === JSON.stringify(fruitPair))
+        const nextPairString = nextPair.asText()
+        if(nextPairString === fruitPair.asText())
         {
             fruitPair = getFruitPair(snakeBodySet)
         }
@@ -131,7 +133,7 @@ function init()
         }
         else
         {
-            snakeBodySet.delete(JSON.stringify(snakeBody.shift()))
+            snakeBodySet.delete(snakeBody.shift().asText())
         }
         snakeBody.push(nextPair)
         snakeBodySet.add(nextPairString)
