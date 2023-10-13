@@ -60,7 +60,6 @@ function getFruitPair(freeSpaces)
     //run if this is efficient
     if(freeSpaces.size > maxX * maxY / 40)
     {
-        //console.log("running v1")
         while(true)
         {
             const newFruitPair = new Pair(Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY))
@@ -70,7 +69,7 @@ function getFruitPair(freeSpaces)
             }
         }
     }
-    //console.log("running v2")
+    
     if(freeSpaces.size === 0)
         return null
     const freeSpacesEntries = Array.from(freeSpaces)
@@ -219,12 +218,10 @@ function init()
             if(nextDirections.length > 2)
                 nextDirections = nextDirections.slice(0,2)
         }
-        else readNextDirections = true
 
         //process directions
         if(nextDirections.length > 0)
         {
-            console.log("Next directions:", nextDirections)
             if(nextDirections.length === 1)
             {
                 nextDirection = nextDirections.shift()
