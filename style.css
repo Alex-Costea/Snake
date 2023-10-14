@@ -2,4 +2,5 @@ pre{
     font-family: monospace;
     border: 1px dashed black;
     display: inline-block;
+    transform-origin: left top;
 }

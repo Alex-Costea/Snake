@@ -1,5 +1,5 @@
-const maxX = 50;
-const maxY = 30;
+const maxX = 40;
+const maxY = 40;
 
 class Pair {
     constructor(x, y) {
@@ -129,6 +129,15 @@ function getDisplayString(snakeBody, fruitPair)
     return display.map(x => x.join('')).join('\n')
 }
 
+function initStyles(gamebody)
+{
+    const width = gamebody.getBoundingClientRect().width
+    const height = gamebody.getBoundingClientRect().height
+    const ratio = width / height
+    const scaleUp = 1.5
+    gamebody.style.transform = `scale(${scaleUp}, ${ratio * scaleUp})`
+}
+
 
 function init()
 {
@@ -157,10 +166,12 @@ function init()
         }
     }
 
-    const gamebody = document.getElementById("gamebody")
-
     let fruitPair = getFruitPair(freeSpaces)
+
+    const gamebody = document.getElementById("gamebody")
     gamebody.innerHTML = getDisplayString(snakeBody, fruitPair)
+
+    initStyles(gamebody)
 
     let gameOver = false
 
