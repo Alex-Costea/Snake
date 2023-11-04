@@ -1,6 +1,17 @@
+@font-face { 
+    font-family: 'DejaVu Mono';
+    src: url('DejaVuSansMono.woff') format('woff');
+    }
+
 pre{
-    font-family: monospace;
+    font-family: 'DejaVu Mono', mono;
     border: 1px dashed black;
+    font-size: large;
     display: inline-block;
     transform-origin: left top;
 }
+
+body {
+    height: 100%;
+    overflow-y: hidden;
+ }

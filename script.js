@@ -134,7 +134,7 @@ function initStyles(gamebody)
     const width = gamebody.getBoundingClientRect().width
     const height = gamebody.getBoundingClientRect().height
     const ratio = width / height
-    const scaleUp = 1.5
+    const scaleUp = 1
     gamebody.style.transform = `scale(${scaleUp}, ${ratio * scaleUp})`
 }
 
