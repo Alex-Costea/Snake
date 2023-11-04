@@ -183,6 +183,7 @@ function init()
         if (event.isComposing || event.keyCode === 229) {
           return;
         }
+        //event.preventDefault()
         if(event.keyCode === 37) // left
             leftPressed = true
         if(event.keyCode === 38) // up
@@ -191,7 +192,9 @@ function init()
             rightPressed = true
         if(event.keyCode === 40) // down
             downPressed = true
-      });
+      },{
+        capture: true,   
+    });
 
     window.addEventListener("keyup", (event) => {
         if (event.isComposing || event.keyCode === 229) {
@@ -293,5 +296,5 @@ function init()
             fruitPair = getFruitPair(freeSpaces)
         }
         gamebody.innerHTML = getDisplayString(snakeBody, fruitPair)
-    }, 50);
+    }, 30);
 }
