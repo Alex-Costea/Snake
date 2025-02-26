@@ -9,6 +9,7 @@ pre{
     font-size: 3vmin;
     display: inline-block;
     transform-origin: left top;
+    user-select: none;
 }
 
 body {
