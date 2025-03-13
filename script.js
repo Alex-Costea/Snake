@@ -31,7 +31,7 @@ function getPositionAfterDirection(pair, direction)
 
 function getDirection(pair1, pair2)
 {
-    for(i=0;i<4;i++)
+    for(let i=0;i<4;i++)
     {
         const newPair = getPositionAfterDirection(pair1, i);
         if(pair2.asText() === newPair.asText())
@@ -43,10 +43,10 @@ function getDirection(pair1, pair2)
 function initDisplay(maxX, maxY)
 {
     let display = []
-    for(i=0;i<maxY;i++)
+    for(let i=0;i<maxY;i++)
     {
         let line = []
-        for(j=0;j<maxX;j++)
+        for(let j=0;j<maxX;j++)
         {
             line.push(" ")
         }
@@ -148,7 +148,7 @@ function init()
     const snakeBody = []
 
     let pair = new Pair(snakeOriginX, snakeOriginY)
-    for(i=0;i<snakeSize;i++)
+    for(let i=0;i<snakeSize;i++)
     {
         snakeBody.push(pair)
         pair = getPositionAfterDirection(pair, direction)
@@ -156,9 +156,9 @@ function init()
     const snakeBodySet = new Set(snakeBody.map(x => x.asText()))
 
     const freeSpaces = new Set()
-    for(i=0;i<maxX;i++)
+    for(let i=0;i<maxX;i++)
     {
-        for(j=0;j<maxY;j++)
+        for(let j=0;j<maxY;j++)
         {
             const newPair = new Pair(i,j)
             if(!snakeBodySet.has(newPair.asText()))
@@ -209,6 +209,50 @@ function init()
         if(event.keyCode === 40) // down
             downPressed = false
     });
+
+    // Swipe Handling for Mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    window.addEventListener("touchstart", (event) => {
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener("touchend", (event) => {
+        touchEndX = event.changedTouches[0].clientX;
+        touchEndY = event.changedTouches[0].clientY;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+        const absDeltaX = Math.abs(deltaX);
+        const absDeltaY = Math.abs(deltaY);
+
+        if (absDeltaX > absDeltaY) {
+            if (deltaX > 50) {
+                rightPressed = true;
+                setTimeout(() => rightPressed = false, 100); // reset
+            } else if (deltaX < -50) {
+                leftPressed = true;
+                setTimeout(() => leftPressed = false, 100);
+            }
+        } else {
+            if (deltaY > 50) {
+                downPressed = true;
+                setTimeout(() => downPressed = false, 100);
+            } else if (deltaY < -50) {
+                upPressed = true;
+                setTimeout(() => upPressed = false, 100);
+            }
+        }
+    }
+
+
     let nextDirection = direction
     let nextDirections = []
 

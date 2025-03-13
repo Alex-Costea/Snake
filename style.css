@@ -4,15 +4,23 @@
     }
 
 pre{
-    font-family: 'DejaVu Mono', mono;
+    font-family: 'DejaVu Mono', mono, serif;
     border: 1px dashed black;
-    font-size: 3vmin;
+    font-size: 3.5vmin;
     display: inline-block;
     transform-origin: left top;
     user-select: none;
 }
 
-body {
+html, body {
     height: 100%;
     overflow-y: hidden;
- }
+    touch-action: none;
+}
+
+body{
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
